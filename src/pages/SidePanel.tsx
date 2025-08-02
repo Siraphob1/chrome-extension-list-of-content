@@ -1,5 +1,5 @@
 import "@/index.css";
-import type { ContentExtractionResult, ContentItem } from '@types';
+import type { ContentExtractionResult, ContentItem } from "@/types/content";
 import { extractContentFromPage } from '@utils/contentExtractor';
 import { useEffect, useState } from 'react';
 
