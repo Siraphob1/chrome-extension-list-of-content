@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import "./SidePanel.css";
+import "../index.css";
 
 interface ContentItem {
   type: string;
@@ -120,36 +120,44 @@ export default function SidePanel() {
     switch (item.type) {
       case 'heading':
         return (
-          <div key={index} className="content-item heading-item">
-            <span className="tag-label">{item.tag.toUpperCase()}</span>
-            <span className="content-text">{item.text}</span>
+          <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-green-500 text-xs leading-normal">
+            <span className="flex-shrink-0 px-1.5 py-0.5 bg-green-500 text-white rounded text-xs font-bold uppercase h-fit">
+              {item.tag.toUpperCase()}
+            </span>
+            <span className="text-gray-700 dark:text-gray-200 break-words">{item.text}</span>
           </div>
         );
       case 'link':
         return (
-          <div key={index} className="content-item link-item">
-            <span className="tag-label">LINK</span>
-            <div className="link-content">
-              <div className="link-text">{item.text}</div>
-              <div className="link-url">{item.href}</div>
+          <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-cyan-500 text-xs leading-normal">
+            <span className="flex-shrink-0 px-1.5 py-0.5 bg-cyan-500 text-white rounded text-xs font-bold uppercase h-fit">
+              LINK
+            </span>
+            <div className="flex flex-col gap-1 flex-1">
+              <div className="text-gray-700 dark:text-gray-200 font-medium">{item.text}</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs break-all font-mono">{item.href}</div>
             </div>
           </div>
         );
       case 'image':
         return (
-          <div key={index} className="content-item image-item">
-            <span className="tag-label">IMG</span>
-            <div className="image-content">
-              <div className="image-alt">{item.alt || 'No alt text'}</div>
-              <div className="image-src">{item.src}</div>
+          <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-yellow-400 text-xs leading-normal">
+            <span className="flex-shrink-0 px-1.5 py-0.5 bg-yellow-600 text-white rounded text-xs font-bold uppercase h-fit">
+              IMG
+            </span>
+            <div className="flex flex-col gap-1 flex-1">
+              <div className="text-gray-700 dark:text-gray-200 font-medium">{item.alt || 'No alt text'}</div>
+              <div className="text-gray-600 dark:text-gray-400 text-xs break-all font-mono">{item.src}</div>
             </div>
           </div>
         );
       case 'paragraph':
         return (
-          <div key={index} className="content-item paragraph-item">
-            <span className="tag-label">P</span>
-            <span className="content-text">{item.text}</span>
+          <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-gray-500 text-xs leading-normal">
+            <span className="flex-shrink-0 px-1.5 py-0.5 bg-gray-500 text-white rounded text-xs font-bold uppercase h-fit">
+              P
+            </span>
+            <span className="text-gray-700 dark:text-gray-200 break-words">{item.text}</span>
           </div>
         );
       default:
@@ -158,36 +166,40 @@ export default function SidePanel() {
   };
 
   return (
-    <div className="sidepanel-container">
-      <div className="header">
-        <h1>Website Content Lister</h1>
-        <div className="current-url">
-          <strong>Current URL:</strong>
-          <span className="url-text">{currentUrl || 'No active tab'}</span>
+    <div className="w-full h-screen p-4 box-border font-system bg-white dark:bg-gray-800 overflow-y-auto text-gray-800 dark:text-gray-200">
+      <div className="mb-5 border-b border-gray-200 dark:border-gray-600 pb-4">
+        <h1 className="m-0 mb-3 text-lg font-semibold text-gray-900 dark:text-white">Website Content Lister</h1>
+        <div className="text-xs text-gray-600 dark:text-gray-300 leading-normal">
+          <strong className="block mb-1 text-gray-700 dark:text-white">Current URL:</strong>
+          <span className="break-all bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded font-mono text-gray-800 dark:text-gray-200">
+            {currentUrl || 'No active tab'}
+          </span>
         </div>
       </div>
 
-      <div className="controls">
+      <div className="mb-5">
         <button
           type="button"
           onClick={analyzeWebsiteContent}
           disabled={loading || !currentUrl}
-          className="analyze-button"
+          className="w-full px-4 py-3 bg-blue-600 text-white border-none rounded-md text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {loading ? 'Analyzing...' : 'Analyze Website Content'}
         </button>
       </div>
 
-      <div className="content-list">
+      <div className="flex-1">
         {contentList.length > 0 ? (
-          <div className="content-results">
-            <h3>Found {contentList.length} content items:</h3>
-            <div className="content-items">
+          <div>
+            <h3 className="m-0 mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+              Found {contentList.length} content items:
+            </h3>
+            <div className="flex flex-col gap-2">
               {contentList.map(renderContentItem)}
             </div>
           </div>
         ) : (
-          <div className="no-content">
+          <div className="text-center py-10 px-5 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
             {loading ? 'Analyzing page content...' : 'Click "Analyze Website Content" to scan the current page'}
           </div>
         )}
