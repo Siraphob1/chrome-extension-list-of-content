@@ -57,44 +57,75 @@ export default function SidePanel() {
     }
   }, []);
 
+  const scrollToElement = async (elementId: string) => {
+    try {
+      if (typeof chrome !== 'undefined' && chrome.tabs && chrome.scripting) {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+        if (tab.id) {
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: (id: string) => {
+              const element = document.getElementById(id);
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center'
+                });
+              }
+            },
+            args: [elementId]
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error scrolling to element:', error);
+    }
+  };
+
   const renderContentItem = (item: ContentItem, index: number) => {
     switch (item.type) {
       case 'heading':
         return (
-          <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-green-500 text-xs leading-normal">
+          <button
+            type="button"
+            key={index}
+            className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-green-500 text-xs leading-normal cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+            onClick={() => item.id && scrollToElement(item.id)}
+            onKeyDown={(e) => {
+              if ((e.key === 'Enter' || e.key === ' ') && item.id) {
+                e.preventDefault();
+                scrollToElement(item.id);
+              }
+            }}
+            tabIndex={0}
+            title={item.id ? `Click to focus on element with ID: ${item.id}` : 'No ID available'}
+          >
             <span className="flex-shrink-0 px-1.5 py-0.5 bg-green-500 text-white rounded text-xs font-bold uppercase h-fit">
               {item.tag?.toUpperCase()}
             </span>
             <div className="flex flex-col gap-1 flex-1">
               <span className="text-gray-700 dark:text-gray-200 break-words">{item.text}</span>
-              {item.id && (
-                <div className="text-gray-500 dark:text-gray-400 text-xs font-mono">
-                  ID: {item.id}
-                </div>
-              )}
+
             </div>
-          </div>
-        );
-      case 'link':
-        return (
-          <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-cyan-500 text-xs leading-normal">
-            <span className="flex-shrink-0 px-1.5 py-0.5 bg-cyan-500 text-white rounded text-xs font-bold uppercase h-fit">
-              LINK
-            </span>
-            <div className="flex flex-col gap-1 flex-1">
-              <div className="text-gray-700 dark:text-gray-200 font-medium">{item.text}</div>
-              <div className="text-gray-600 dark:text-gray-400 text-xs break-all font-mono">{item.href}</div>
-              {item.id && (
-                <div className="text-gray-500 dark:text-gray-400 text-xs font-mono">
-                  ID: {item.id}
-                </div>
-              )}
-            </div>
-          </div>
+          </button>
         );
       case 'image':
         return (
-          <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-yellow-400 text-xs leading-normal">
+          <button
+            type="button"
+            key={index}
+            className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-yellow-400 text-xs leading-normal cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+            onClick={() => item.id && scrollToElement(item.id)}
+            onKeyDown={(e) => {
+              if ((e.key === 'Enter' || e.key === ' ') && item.id) {
+                e.preventDefault();
+                scrollToElement(item.id);
+              }
+            }}
+            tabIndex={0}
+            title={item.id ? `Click to focus on element with ID: ${item.id}` : 'No ID available'}
+          >
             <span className="flex-shrink-0 px-1.5 py-0.5 bg-yellow-600 text-white rounded text-xs font-bold uppercase h-fit">
               IMG
             </span>
@@ -107,11 +138,24 @@ export default function SidePanel() {
                 </div>
               )}
             </div>
-          </div>
+          </button>
         );
       case 'paragraph':
         return (
-          <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-gray-500 text-xs leading-normal">
+          <button
+            type="button"
+            key={index}
+            className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-gray-500 text-xs leading-normal cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+            onClick={() => item.id && scrollToElement(item.id)}
+            onKeyDown={(e) => {
+              if ((e.key === 'Enter' || e.key === ' ') && item.id) {
+                e.preventDefault();
+                scrollToElement(item.id);
+              }
+            }}
+            tabIndex={0}
+            title={item.id ? `Click to focus on element with ID: ${item.id}` : 'No ID available'}
+          >
             <span className="flex-shrink-0 px-1.5 py-0.5 bg-gray-500 text-white rounded text-xs font-bold uppercase h-fit">
               P
             </span>
@@ -123,7 +167,7 @@ export default function SidePanel() {
                 </div>
               )}
             </div>
-          </div>
+          </button>
         );
       default:
         return null;

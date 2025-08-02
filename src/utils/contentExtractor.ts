@@ -25,25 +25,6 @@ export const extractContentFromPage = (): ContentExtractionResult => {
       stats.headings++;
     }
   }
-
-  // Extract links with id
-  const links = document.querySelectorAll('a[href][id]');
-  for (const link of links) {
-    const href = (link as HTMLAnchorElement).href;
-    const text = link.textContent?.trim() || '';
-    const id = (link as HTMLElement).id;
-    if (href && text && id) {
-      content.push({
-        type: 'link',
-        tag: 'a',
-        text,
-        href,
-        id
-      });
-      stats.links++;
-    }
-  }
-
   // Extract images with id
   const images = document.querySelectorAll('img[src][id]');
   for (const img of images) {
