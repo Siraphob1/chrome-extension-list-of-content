@@ -1,6 +1,6 @@
+import SidePanel from "@pages/SidePanel";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import SidePanel from "./pages/SidePanel";
 
 const rootElement = document.getElementById("sidepanel-root");
 if (rootElement) {

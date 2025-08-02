@@ -1,18 +1,11 @@
+import "@/index.css";
+import type { ContentExtractionResult, ContentItem } from '@types';
+import { extractContentFromPage } from '@utils/contentExtractor';
 import { useEffect, useState } from 'react';
-import "../index.css";
-
-interface ContentItem {
-  type: string;
-  tag: string;
-  text?: string;
-  href?: string;
-  src?: string;
-  alt?: string;
-}
 
 export default function SidePanel() {
   const [currentUrl, setCurrentUrl] = useState<string>('');
-  const [contentList, setContentList] = useState<ContentItem[]>([]);
+  const [extractionResult, setExtractionResult] = useState<ContentExtractionResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -46,7 +39,7 @@ export default function SidePanel() {
           });
 
           if (results[0]?.result) {
-            setContentList(results[0].result);
+            setExtractionResult(results[0].result);
           }
         }
       }
@@ -55,65 +48,6 @@ export default function SidePanel() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const extractContentFromPage = (): ContentItem[] => {
-    const content: ContentItem[] = [];
-
-    // Extract headings
-    const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    for (const heading of headings) {
-      content.push({
-        type: 'heading',
-        tag: heading.tagName.toLowerCase(),
-        text: heading.textContent?.trim() || ''
-      });
-    }
-
-    // Extract links
-    const links = document.querySelectorAll('a[href]');
-    for (const link of links) {
-      const href = (link as HTMLAnchorElement).href;
-      const text = link.textContent?.trim() || '';
-      if (href && text) {
-        content.push({
-          type: 'link',
-          tag: 'a',
-          text,
-          href
-        });
-      }
-    }
-
-    // Extract images
-    const images = document.querySelectorAll('img[src]');
-    for (const img of images) {
-      const src = (img as HTMLImageElement).src;
-      const alt = (img as HTMLImageElement).alt || '';
-      if (src) {
-        content.push({
-          type: 'image',
-          tag: 'img',
-          src,
-          alt
-        });
-      }
-    }
-
-    // Extract paragraphs
-    const paragraphs = document.querySelectorAll('p');
-    for (const p of paragraphs) {
-      const text = p.textContent?.trim() || '';
-      if (text.length > 20) { // Only include substantial paragraphs
-        content.push({
-          type: 'paragraph',
-          tag: 'p',
-          text: text.substring(0, 200) + (text.length > 200 ? '...' : '')
-        });
-      }
-    }
-
-    return content;
   };
 
   const renderContentItem = (item: ContentItem, index: number) => {
@@ -189,13 +123,28 @@ export default function SidePanel() {
       </div>
 
       <div className="flex-1">
-        {contentList.length > 0 ? (
+        {extractionResult && extractionResult.content.length > 0 ? (
           <div>
+            <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md border border-blue-200 dark:border-blue-800">
+              <h3 className="m-0 mb-2 text-sm font-semibold text-blue-800 dark:text-blue-200">
+                Analysis Results
+              </h3>
+              <div className="grid grid-cols-2 gap-2 text-xs text-blue-700 dark:text-blue-300">
+                <div>Total items: <span className="font-semibold">{extractionResult.stats.total}</span></div>
+                <div>Headings: <span className="font-semibold">{extractionResult.stats.headings}</span></div>
+                <div>Links: <span className="font-semibold">{extractionResult.stats.links}</span></div>
+                <div>Images: <span className="font-semibold">{extractionResult.stats.images}</span></div>
+                <div className="col-span-2">Paragraphs: <span className="font-semibold">{extractionResult.stats.paragraphs}</span></div>
+              </div>
+              <div className="mt-2 text-xs text-blue-600 dark:text-blue-400">
+                Analyzed at: {new Date(extractionResult.timestamp).toLocaleTimeString()}
+              </div>
+            </div>
             <h3 className="m-0 mb-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-              Found {contentList.length} content items:
+              Content Items:
             </h3>
             <div className="flex flex-col gap-2">
-              {contentList.map(renderContentItem)}
+              {extractionResult.content.map(renderContentItem)}
             </div>
           </div>
         ) : (
