@@ -5,6 +5,7 @@ export interface ContentItem {
   href?: string;
   src?: string;
   alt?: string;
+  id?: string;
 }
 
 export interface ContentStats {

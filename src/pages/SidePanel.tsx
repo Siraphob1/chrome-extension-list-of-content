@@ -1,19 +1,26 @@
 import "@/index.css";
 import type { ContentExtractionResult, ContentItem } from "@customTypes/content";
 import { extractContentFromPage } from '@utils/contentExtractor';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+// Chrome API type definitions
+interface TabChangeInfo {
+  url?: string;
+  status?: string;
+}
+
+interface TabActiveInfo {
+  tabId: number;
+  windowId: number;
+}
 
 export default function SidePanel() {
   const [currentUrl, setCurrentUrl] = useState<string>('');
   const [extractionResult, setExtractionResult] = useState<ContentExtractionResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    console.log("Website Content Lister side panel loaded!");
-    getCurrentTab();
-  }, []);
 
-  const getCurrentTab = async () => {
+  const getCurrentTab = useCallback(async () => {
     try {
       if (typeof chrome !== 'undefined' && chrome.tabs) {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -24,9 +31,9 @@ export default function SidePanel() {
     } catch (error) {
       console.error('Error getting current tab:', error);
     }
-  };
+  }, []);
 
-  const analyzeWebsiteContent = async () => {
+  const analyzeWebsiteContent = useCallback(async () => {
     setLoading(true);
     try {
       if (typeof chrome !== 'undefined' && chrome.tabs && chrome.scripting) {
@@ -48,7 +55,7 @@ export default function SidePanel() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const renderContentItem = (item: ContentItem, index: number) => {
     switch (item.type) {
@@ -56,9 +63,16 @@ export default function SidePanel() {
         return (
           <div key={index} className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-green-500 text-xs leading-normal">
             <span className="flex-shrink-0 px-1.5 py-0.5 bg-green-500 text-white rounded text-xs font-bold uppercase h-fit">
-              {item.tag.toUpperCase()}
+              {item.tag?.toUpperCase()}
             </span>
-            <span className="text-gray-700 dark:text-gray-200 break-words">{item.text}</span>
+            <div className="flex flex-col gap-1 flex-1">
+              <span className="text-gray-700 dark:text-gray-200 break-words">{item.text}</span>
+              {item.id && (
+                <div className="text-gray-500 dark:text-gray-400 text-xs font-mono">
+                  ID: {item.id}
+                </div>
+              )}
+            </div>
           </div>
         );
       case 'link':
@@ -70,6 +84,11 @@ export default function SidePanel() {
             <div className="flex flex-col gap-1 flex-1">
               <div className="text-gray-700 dark:text-gray-200 font-medium">{item.text}</div>
               <div className="text-gray-600 dark:text-gray-400 text-xs break-all font-mono">{item.href}</div>
+              {item.id && (
+                <div className="text-gray-500 dark:text-gray-400 text-xs font-mono">
+                  ID: {item.id}
+                </div>
+              )}
             </div>
           </div>
         );
@@ -82,6 +101,11 @@ export default function SidePanel() {
             <div className="flex flex-col gap-1 flex-1">
               <div className="text-gray-700 dark:text-gray-200 font-medium">{item.alt || 'No alt text'}</div>
               <div className="text-gray-600 dark:text-gray-400 text-xs break-all font-mono">{item.src}</div>
+              {item.id && (
+                <div className="text-gray-500 dark:text-gray-400 text-xs font-mono">
+                  ID: {item.id}
+                </div>
+              )}
             </div>
           </div>
         );
@@ -91,13 +115,63 @@ export default function SidePanel() {
             <span className="flex-shrink-0 px-1.5 py-0.5 bg-gray-500 text-white rounded text-xs font-bold uppercase h-fit">
               P
             </span>
-            <span className="text-gray-700 dark:text-gray-200 break-words">{item.text}</span>
+            <div className="flex flex-col gap-1 flex-1">
+              <span className="text-gray-700 dark:text-gray-200 break-words">{item.text}</span>
+              {item.id && (
+                <div className="text-gray-500 dark:text-gray-400 text-xs font-mono">
+                  ID: {item.id}
+                </div>
+              )}
+            </div>
           </div>
         );
       default:
         return null;
     }
   };
+
+
+  useEffect(() => {
+    console.log("Website Content Lister side panel loaded!");
+    getCurrentTab();
+
+    // Listen for tab URL changes
+    const handleTabUpdated = (tabId: number, changeInfo: TabChangeInfo, tab: chrome.tabs.Tab) => {
+      if (changeInfo.url && tab.active) {
+        setCurrentUrl(changeInfo.url);
+        // Clear previous results when URL changes
+        setExtractionResult(null);
+      }
+    };
+
+    // Listen for tab switches
+    const handleTabActivated = async (activeInfo: TabActiveInfo) => {
+      try {
+        const tab = await chrome.tabs.get(activeInfo.tabId);
+        if (tab.url) {
+          setCurrentUrl(tab.url);
+          // Clear previous results when switching tabs
+          setExtractionResult(null);
+        }
+      } catch (error) {
+        console.error("Error getting activated tab:", error);
+      }
+    };
+
+    // Add event listeners
+    if (typeof chrome !== 'undefined' && chrome.tabs) {
+      chrome.tabs.onUpdated.addListener(handleTabUpdated);
+      chrome.tabs.onActivated.addListener(handleTabActivated);
+    }
+
+    // Cleanup listeners on unmount
+    return () => {
+      if (typeof chrome !== 'undefined' && chrome.tabs) {
+        chrome.tabs.onUpdated.removeListener(handleTabUpdated);
+        chrome.tabs.onActivated.removeListener(handleTabActivated);
+      }
+    };
+  }, [getCurrentTab]);
 
   return (
     <div className="w-full h-screen p-4 box-border font-system bg-white dark:bg-gray-800 overflow-y-auto text-gray-800 dark:text-gray-200">
@@ -110,7 +184,6 @@ export default function SidePanel() {
           </span>
         </div>
       </div>
-
       <div className="mb-5">
         <button
           type="button"

@@ -10,61 +10,69 @@ export const extractContentFromPage = (): ContentExtractionResult => {
     total: 0
   };
 
-  // Extract headings
-  const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  // Extract headings with id
+  const headings = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
   for (const heading of headings) {
     const text = heading.textContent?.trim() || '';
-    if (text) {
+    const id = (heading as HTMLElement).id;
+    if (text && id) {
       content.push({
         type: 'heading',
         tag: heading.tagName.toLowerCase(),
-        text
+        text,
+        id
       });
       stats.headings++;
     }
   }
 
-  // Extract links
-  const links = document.querySelectorAll('a[href]');
+  // Extract links with id
+  const links = document.querySelectorAll('a[href][id]');
   for (const link of links) {
     const href = (link as HTMLAnchorElement).href;
     const text = link.textContent?.trim() || '';
-    if (href && text) {
+    const id = (link as HTMLElement).id;
+    if (href && text && id) {
       content.push({
         type: 'link',
         tag: 'a',
         text,
-        href
+        href,
+        id
       });
       stats.links++;
     }
   }
 
-  // Extract images
-  const images = document.querySelectorAll('img[src]');
+  // Extract images with id
+  const images = document.querySelectorAll('img[src][id]');
   for (const img of images) {
     const src = (img as HTMLImageElement).src;
     const alt = (img as HTMLImageElement).alt || '';
-    if (src) {
+    const id = (img as HTMLElement).id;
+    if (src && id) {
       content.push({
         type: 'image',
         tag: 'img',
         src,
-        alt
+        alt,
+        id
       });
       stats.images++;
     }
   }
 
-  // Extract paragraphs
-  const paragraphs = document.querySelectorAll('p');
+  // Extract paragraphs with id
+  const paragraphs = document.querySelectorAll('p[id]');
   for (const p of paragraphs) {
     const text = p.textContent?.trim() || '';
-    if (text.length > 20) { // Only include substantial paragraphs
+    const id = (p as HTMLElement).id;
+    if (text.length > 20 && id) { // Only include substantial paragraphs with id
       content.push({
         type: 'paragraph',
         tag: 'p',
-        text: text.substring(0, 200) + (text.length > 200 ? '...' : '')
+        text: text.substring(0, 200) + (text.length > 200 ? '...' : ''),
+        id
       });
       stats.paragraphs++;
     }
