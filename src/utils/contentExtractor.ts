@@ -1,4 +1,4 @@
-import type { ContentExtractionResult, ContentItem, ContentStats } from '@types';
+import type { ContentExtractionResult, ContentItem, ContentStats } from '@customTypes/content';
 
 export const extractContentFromPage = (): ContentExtractionResult => {
   const content: ContentItem[] = [];

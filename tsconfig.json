@@ -19,28 +19,19 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
       "@/*": [
-        "src/*"
+        "*"
       ],
-      "@types": [
-        "src/types"
-      ],
-      "@types/*": [
-        "src/types/*"
-      ],
-      "@utils": [
-        "src/utils"
+      "@customTypes/*": [
+        "types/*"
       ],
       "@utils/*": [
-        "src/utils/*"
-      ],
-      "@pages": [
-        "src/pages"
+        "utils/*"
       ],
       "@pages/*": [
-        "src/pages/*"
+        "pages/*"
       ]
     }
   },
