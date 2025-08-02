@@ -93,17 +93,11 @@ export default function SidePanel() {
     return { marginLeft: `${baseIndent}px` };
   };
 
-  const getHierarchyPrefix = (level: number): string => {
-    if (level === 1) return '';
-    return '- ';
-  };
-
   const renderContentItem = (item: ContentItem, index: number) => {
     switch (item.type) {
       case 'heading': {
         const headingLevel = getHeadingLevel(item.tag || 'h1');
         const indentStyle = getIndentationStyle(headingLevel);
-        const hierarchyPrefix = getHierarchyPrefix(headingLevel);
 
         return (
           <div key={index} style={indentStyle}>
@@ -125,7 +119,7 @@ export default function SidePanel() {
               </span>
               <div className="flex flex-col gap-1 flex-1">
                 <span className="text-gray-700 dark:text-gray-200 break-words">
-                  {hierarchyPrefix}{item.text}
+                  {item.text}
                 </span>
               </div>
             </button>
