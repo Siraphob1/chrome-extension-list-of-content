@@ -89,12 +89,22 @@ export default function SidePanel() {
     console.log("Website Content Lister side panel loaded!");
     getCurrentTab();
 
+    // Automatically analyze content when side panel loads
+    const initializeContent = async () => {
+      await getCurrentTab();
+      await analyzeWebsiteContent();
+    };
+
+    initializeContent();
+
     // Listen for tab URL changes
     const handleTabUpdated = (tabId: number, changeInfo: TabChangeInfo, tab: chrome.tabs.Tab) => {
       if (changeInfo.url && tab.active) {
         setCurrentUrl(changeInfo.url);
         // Clear previous results when URL changes
         setExtractionResult(null);
+        // Auto-analyze new page content
+        setTimeout(() => analyzeWebsiteContent(), 500);
       }
     };
 
@@ -106,6 +116,8 @@ export default function SidePanel() {
           setCurrentUrl(tab.url);
           // Clear previous results when switching tabs
           setExtractionResult(null);
+          // Auto-analyze new tab content
+          setTimeout(() => analyzeWebsiteContent(), 500);
         }
       } catch (error) {
         console.error("Error getting activated tab:", error);
@@ -125,7 +137,7 @@ export default function SidePanel() {
         chrome.tabs.onActivated.removeListener(handleTabActivated);
       }
     };
-  }, [getCurrentTab]);
+  }, [getCurrentTab, analyzeWebsiteContent]);
 
   return (
     <div className="w-full h-screen p-4 box-border font-system bg-white dark:bg-gray-800 overflow-y-auto text-gray-800 dark:text-gray-200">
@@ -145,7 +157,7 @@ export default function SidePanel() {
           disabled={loading || !currentUrl}
           className="w-full px-4 py-3 bg-blue-600 text-white border-none rounded-md text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          {loading ? 'Analyzing...' : 'Analyze Website Content'}
+          {loading ? 'Analyzing...' : 'Re-analyze Website Content'}
         </button>
       </div>
 
@@ -183,7 +195,7 @@ export default function SidePanel() {
           </div>
         ) : (
           <div className="text-center py-10 px-5 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-            {loading ? 'Analyzing page content...' : 'Click "Analyze Website Content" to scan the current page'}
+            {loading ? 'Analyzing page content...' : 'No content found with IDs on this page. Make sure elements have ID attributes.'}
           </div>
         )}
       </div>
