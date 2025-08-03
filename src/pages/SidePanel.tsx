@@ -103,7 +103,7 @@ export default function SidePanel() {
           <div key={index} style={indentStyle}>
             <button
               type="button"
-              className="flex gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-3 border-green-500 text-xs leading-normal cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors w-full"
+              className="flex gap-2   dark:bg-gray-700 rounded-md  text-xs leading-normal cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors w-full max-w-max"
               onClick={() => item.id && scrollToElement(item.id)}
               onKeyDown={(e) => {
                 if ((e.key === 'Enter' || e.key === ' ') && item.id) {
@@ -114,14 +114,9 @@ export default function SidePanel() {
               tabIndex={0}
               title={item.id ? `Click to focus on element with ID: ${item.id}` : 'No ID available'}
             >
-              <span className="flex-shrink-0 px-1.5 py-0.5 bg-green-500 text-white rounded text-xs font-bold uppercase h-fit">
-                {item.tag?.toUpperCase()}
+              <span className="text-gray-700 dark:text-gray-200 break-words">
+                {item.text}
               </span>
-              <div className="flex flex-col gap-1 flex-1">
-                <span className="text-gray-700 dark:text-gray-200 break-words">
-                  {item.text}
-                </span>
-              </div>
             </button>
           </div>
         );
