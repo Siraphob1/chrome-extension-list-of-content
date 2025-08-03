@@ -11,7 +11,7 @@ export const extractContentFromPage = (): ContentExtractionResult => {
   };
 
   // Get all elements in document order
-  const allElements = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id],  p[id]');
+  const allElements = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
 
   for (const element of allElements) {
     const tagName = element.tagName.toLowerCase();
@@ -28,18 +28,6 @@ export const extractContentFromPage = (): ContentExtractionResult => {
           id
         });
         stats.headings++;
-      }
-    } else if (tagName === 'p') {
-      // Handle paragraphs
-      const text = element.textContent?.trim() || '';
-      if (text.length > 20 && id) { // Only include substantial paragraphs with id
-        content.push({
-          type: 'paragraph',
-          tag: 'p',
-          text: text.substring(0, 200) + (text.length > 200 ? '...' : ''),
-          id
-        });
-        stats.paragraphs++;
       }
     }
   }
