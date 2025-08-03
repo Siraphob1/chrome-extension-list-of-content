@@ -158,7 +158,7 @@ export default function SidePanel() {
               Content Items:
             </h3>
             <div className="flex flex-col gap-2">
-              {extractionResult.content.map((item, index) => (
+              {extractionResult.content?.map((item, index) => (
                 <ContentItemComponent
                   key={item.id ? `${item.type}-${item.id}` : `${item.type}-${index}`}
                   item={item}

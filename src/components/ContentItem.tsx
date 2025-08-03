@@ -17,9 +17,15 @@ export default function ContentItem({ item, index, onScrollToElement }: ContentI
     return { marginLeft: `${baseIndent}px` };
   };
 
+  const getPrefix = (level: number): string => {
+    if (level === 1) return ''; // No prefix for H1
+    return '-'
+  };
+
   if (item.type !== 'heading') return null;
   const headingLevel = getHeadingLevel(item.tag || 'h1');
   const indentStyle = getIndentationStyle(headingLevel);
+  const prefix = getPrefix(headingLevel);
 
   return (
     <div style={indentStyle}>
@@ -37,7 +43,7 @@ export default function ContentItem({ item, index, onScrollToElement }: ContentI
         title={item.id ? `Click to focus on element with ID: ${item.id}` : 'No ID available'}
       >
         <span className="text-gray-700 dark:text-gray-200 break-words">
-          {item.text}
+          {prefix}{item.text}
         </span>
       </button>
     </div>
