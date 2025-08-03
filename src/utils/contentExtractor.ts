@@ -11,7 +11,7 @@ export const extractContentFromPage = (): ContentExtractionResult => {
   };
 
   // Get all elements in document order
-  const allElements = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
+  const allElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
 
   for (const element of allElements) {
     const tagName = element.tagName.toLowerCase();
@@ -20,12 +20,12 @@ export const extractContentFromPage = (): ContentExtractionResult => {
     if (tagName.match(/^h[1-6]$/)) {
       // Handle headings
       const text = element.textContent?.trim() || '';
-      if (text && id) {
+      if (text) {
         content.push({
           type: 'heading',
           tag: tagName,
           text,
-          id
+          id: id || undefined // Use undefined if no id exists
         });
         stats.headings++;
       }
