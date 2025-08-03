@@ -25,6 +25,6 @@
 		"{{chrome}}.service_worker": "src/background.ts",
 		"{{firefox}}.scripts": ["src/background.ts"]
 	},
-	"{{chrome}}.permissions": ["sidePanel", "activeTab", "scripting"],
+	"{{chrome}}.permissions": ["sidePanel", "activeTab", "scripting", "tabs"],
 	"{{firefox}}.permissions": ["tabs", "activeTab"]
 }
