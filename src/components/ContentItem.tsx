@@ -28,10 +28,11 @@ export default function ContentItem({ item, index, onScrollToElement }: ContentI
   const prefix = getPrefix(headingLevel);
 
   return (
-    <div style={indentStyle}>
+    <div style={indentStyle} className="flex">
+      {!!prefix && <span>-</span>}
       <button
         type="button"
-        className="flex gap-2   dark:bg-gray-700 rounded-md  text-xs leading-normal cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors w-full max-w-max"
+        className="flex gap-2   dark:bg-gray-700 rounded-md  text-xs text-start leading-normal cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors w-full max-w-max"
         onClick={() => item.id && onScrollToElement(item.id)}
         onKeyDown={(e) => {
           if ((e.key === 'Enter' || e.key === ' ') && item.id) {
@@ -43,7 +44,7 @@ export default function ContentItem({ item, index, onScrollToElement }: ContentI
         title={item.id ? `Click to focus on element with ID: ${item.id}` : 'No ID available'}
       >
         <span className="text-gray-700 dark:text-gray-200 break-words">
-          {prefix}{item.text}
+          {item.text}
         </span>
       </button>
     </div>
