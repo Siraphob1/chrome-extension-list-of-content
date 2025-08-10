@@ -62,14 +62,16 @@ export default function SidePanel() {
   const handleTabUpdated = useCallback((tabId: number, changeInfo: TabChangeInfo, tab: chrome.tabs.Tab) => {
     if (changeInfo.url && tab.active) {
       setCurrentUrl(changeInfo.url);
-      // Clear previous results when URL changes
       setExtractionResult(null);
-      // Auto-analyze new page content
       setTimeout(() => analyzeWebsiteContent(), 500);
     }
   }, [analyzeWebsiteContent]);
 
-
+  const handleTabActivated = useCallback(async () => {
+    await getCurrentTab();
+    setExtractionResult(null);
+    setTimeout(() => analyzeWebsiteContent(), 500);
+  }, [getCurrentTab, analyzeWebsiteContent]);
 
   useEffect(() => {
     console.log("Website Content Lister side panel loaded! 1");
@@ -77,35 +79,27 @@ export default function SidePanel() {
 
     if (typeof chrome !== 'undefined' && chrome.tabs) {
       chrome.tabs.onUpdated.addListener(handleTabUpdated);
+      chrome.tabs.onActivated.addListener(handleTabActivated);
     }
 
     return () => {
       if (typeof chrome !== 'undefined' && chrome.tabs) {
         chrome.tabs.onUpdated.removeListener(handleTabUpdated);
+        chrome.tabs.onActivated.removeListener(handleTabActivated);
       }
     };
-  }, [getCurrentTab, handleTabUpdated]);
+  }, [getCurrentTab, handleTabUpdated, handleTabActivated]);
 
   return (
     <div className="w-full h-screen p-4 box-border font-system bg-white dark:bg-gray-800 overflow-y-auto text-gray-800 dark:text-gray-200">
       <div className="mb-5 border-b border-gray-200 dark:border-gray-600 pb-4">
-        <h1 className="m-0 mb-3 text-lg font-semibold text-gray-900 dark:text-white">Website Content Lister</h1>
+        <h1 className="m-0 mb-3 text-lg font-semibold text-gray-900 dark:text-white">Website Content Lister1</h1>
         <div className="text-xs text-gray-600 dark:text-gray-300 leading-normal">
           <strong className="block mb-1 text-gray-700 dark:text-white">Current URL:</strong>
           <span className="break-all bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded font-mono text-gray-800 dark:text-gray-200">
             {currentUrl || 'No active tab'}
           </span>
         </div>
-      </div>
-      <div className="mb-5">
-        <button
-          type="button"
-          onClick={analyzeWebsiteContent}
-          disabled={loading || !currentUrl}
-          className="w-full px-4 py-3 bg-blue-600 text-white border-none rounded-md text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Analyzing...' : 'Re-analyze Website Content'}
-        </button>
       </div>
 
       <div className="flex-1">

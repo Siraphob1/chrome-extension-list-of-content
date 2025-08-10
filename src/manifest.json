@@ -26,5 +26,6 @@
 		"{{firefox}}.scripts": ["src/background.ts"]
 	},
 	"{{chrome}}.permissions": ["sidePanel", "activeTab", "scripting", "tabs"],
-	"{{firefox}}.permissions": ["tabs", "activeTab"]
+	"{{firefox}}.permissions": ["tabs", "activeTab"],
+	"host_permissions": ["<all_urls>"]
 }
