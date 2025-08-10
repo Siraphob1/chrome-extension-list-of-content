@@ -59,60 +59,32 @@ export default function SidePanel() {
     }
   }, []);
 
+  const handleTabUpdated = useCallback((tabId: number, changeInfo: TabChangeInfo, tab: chrome.tabs.Tab) => {
+    if (changeInfo.url && tab.active) {
+      setCurrentUrl(changeInfo.url);
+      // Clear previous results when URL changes
+      setExtractionResult(null);
+      // Auto-analyze new page content
+      setTimeout(() => analyzeWebsiteContent(), 500);
+    }
+  }, [analyzeWebsiteContent]);
+
+
 
   useEffect(() => {
-    console.log("Website Content Lister side panel loaded!");
+    console.log("Website Content Lister side panel loaded! 1");
     getCurrentTab();
 
-    // Automatically analyze content when side panel loads
-    const initializeContent = async () => {
-      await getCurrentTab();
-      await analyzeWebsiteContent();
-    };
-
-    initializeContent();
-
-    // Listen for tab URL changes
-    const handleTabUpdated = (tabId: number, changeInfo: TabChangeInfo, tab: chrome.tabs.Tab) => {
-      if (changeInfo.url && tab.active) {
-        setCurrentUrl(changeInfo.url);
-        // Clear previous results when URL changes
-        setExtractionResult(null);
-        // Auto-analyze new page content
-        setTimeout(() => analyzeWebsiteContent(), 500);
-      }
-    };
-
-    // Listen for tab switches
-    const handleTabActivated = async (activeInfo: TabActiveInfo) => {
-      try {
-        const tab = await chrome.tabs.get(activeInfo.tabId);
-        if (tab.url) {
-          setCurrentUrl(tab.url);
-          // Clear previous results when switching tabs
-          setExtractionResult(null);
-          // Auto-analyze new tab content
-          setTimeout(() => analyzeWebsiteContent(), 500);
-        }
-      } catch (error) {
-        console.error("Error getting activated tab:", error);
-      }
-    };
-
-    // Add event listeners
     if (typeof chrome !== 'undefined' && chrome.tabs) {
       chrome.tabs.onUpdated.addListener(handleTabUpdated);
-      chrome.tabs.onActivated.addListener(handleTabActivated);
     }
 
-    // Cleanup listeners on unmount
     return () => {
       if (typeof chrome !== 'undefined' && chrome.tabs) {
         chrome.tabs.onUpdated.removeListener(handleTabUpdated);
-        chrome.tabs.onActivated.removeListener(handleTabActivated);
       }
     };
-  }, [getCurrentTab, analyzeWebsiteContent]);
+  }, [getCurrentTab, handleTabUpdated]);
 
   return (
     <div className="w-full h-screen p-4 box-border font-system bg-white dark:bg-gray-800 overflow-y-auto text-gray-800 dark:text-gray-200">
