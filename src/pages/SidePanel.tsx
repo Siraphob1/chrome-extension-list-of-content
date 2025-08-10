@@ -1,94 +1,11 @@
 import "@/index.css";
 import ContentItemComponent from '@components/ContentItem';
-import type { ContentExtractionResult } from "@customTypes/content";
-import { extractContentFromPage } from '@utils/contentExtractor';
 import { scrollToElement } from '@utils/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import usePageContentAnalysis from '../hooks/usePageContentAnalysis';
 
-// Chrome API type definitions
-interface TabChangeInfo {
-  url?: string;
-  status?: string;
-}
-
-interface TabActiveInfo {
-  tabId: number;
-  windowId: number;
-}
 
 export default function SidePanel() {
-  const [currentUrl, setCurrentUrl] = useState<string>('');
-  const [extractionResult, setExtractionResult] = useState<ContentExtractionResult | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-
-
-  const getCurrentTab = useCallback(async () => {
-    try {
-      if (typeof chrome !== 'undefined' && chrome.tabs) {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        if (tab.url) {
-          setCurrentUrl(tab.url);
-        }
-      }
-    } catch (error) {
-      console.error('Error getting current tab:', error);
-    }
-  }, []);
-
-  const analyzeWebsiteContent = useCallback(async () => {
-    setLoading(true);
-    try {
-      if (typeof chrome !== 'undefined' && chrome.tabs && chrome.scripting) {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-        if (tab.id) {
-          const results = await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: extractContentFromPage,
-          });
-
-          if (results[0]?.result) {
-            setExtractionResult(results[0].result);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error analyzing content:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const handleTabUpdated = useCallback((tabId: number, changeInfo: TabChangeInfo, tab: chrome.tabs.Tab) => {
-    if (changeInfo.url && tab.active) {
-      setCurrentUrl(changeInfo.url);
-      setExtractionResult(null);
-      setTimeout(() => analyzeWebsiteContent(), 500);
-    }
-  }, [analyzeWebsiteContent]);
-
-  const handleTabActivated = useCallback(async () => {
-    await getCurrentTab();
-    setExtractionResult(null);
-    setTimeout(() => analyzeWebsiteContent(), 500);
-  }, [getCurrentTab, analyzeWebsiteContent]);
-
-  useEffect(() => {
-    console.log("Website Content Lister side panel loaded! 1");
-    getCurrentTab();
-
-    if (typeof chrome !== 'undefined' && chrome.tabs) {
-      chrome.tabs.onUpdated.addListener(handleTabUpdated);
-      chrome.tabs.onActivated.addListener(handleTabActivated);
-    }
-
-    return () => {
-      if (typeof chrome !== 'undefined' && chrome.tabs) {
-        chrome.tabs.onUpdated.removeListener(handleTabUpdated);
-        chrome.tabs.onActivated.removeListener(handleTabActivated);
-      }
-    };
-  }, [getCurrentTab, handleTabUpdated, handleTabActivated]);
+  const { currentUrl, extractionResult, loading } = usePageContentAnalysis();
 
   return (
     <div className="w-full h-screen p-4 box-border font-system bg-white dark:bg-gray-800 overflow-y-auto text-gray-800 dark:text-gray-200">
