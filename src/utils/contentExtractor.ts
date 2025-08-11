@@ -18,7 +18,8 @@ export const extractContentFromPage = (): ContentExtractionResult => {
     const tagName = element.tagName.toLowerCase();
     let id = (element as HTMLElement).id;
 
-    if (tagName.match(/^h[1-6]$/)) {
+    const isDisplay = element.getClientRects().length > 0
+    if (tagName.match(/^h[1-6]$/) && isDisplay) {
       // Handle headings
       const text = element.textContent?.trim() || '';
       if (text) {
