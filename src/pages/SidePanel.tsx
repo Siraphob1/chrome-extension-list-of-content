@@ -11,9 +11,9 @@ export default function SidePanel() {
   const displayOptions = useDisplay();
 
   return (
-    <div className="w-full p-4 box-border font-system bg-white text-gray-800">
+    <div className="w-full p-4 pr-0 box-border font-system bg-white text-gray-800">
       <HeadingSidePanel analyzeWebsiteContent={analyzeWebsiteContent} loading={loading} displayOptions={displayOptions} />
-      <div className="mt-4 flex-1">
+      <div className="mt-4 overflow-y-auto max-h-[calc(100vh-100px)]">
         {extractionResult && extractionResult?.content.length > 0 && !loading ? (
           <div>
             <div className="flex flex-col gap-2">

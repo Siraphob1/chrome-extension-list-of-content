@@ -11,7 +11,7 @@ interface Props {
 const HeadingSidePanel = ({ analyzeWebsiteContent, loading, displayOptions }: Props) => {
   const { toggleTagName, stateTagName } = displayOptions;
   return (
-    <section className="sticky top-4 flex items-center justify-between">
+    <section className="sticky top-4 flex items-center justify-between bg-white">
       <h1 className=" text-lg font-semibold text-gray-900">Content Items</h1>
       <section className="flex items-center gap-2">
         <button
