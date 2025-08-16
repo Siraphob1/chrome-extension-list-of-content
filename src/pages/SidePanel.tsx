@@ -1,9 +1,9 @@
-import HeadingSidePanel from "@/components/HeadingSidepanel";
 import { useDisplay } from "@/hooks/useDisplay";
 import { useResize } from "@/hooks/useResize";
 import { useSelectContent } from "@/hooks/useSelectContent";
 import "@/index.css";
 import ContentItemComponent from '@components/ContentItem';
+import HeadingSidePanel from "@components/HeadingSidePanel";
 import { scrollToElement } from '@utils/navigation';
 import usePageContentAnalysis from '../hooks/usePageContentAnalysis';
 
