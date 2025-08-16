@@ -1,3 +1,4 @@
+import { isUrlChange } from '@/utils/url';
 import type { ContentExtractionResult } from '@customTypes/content';
 import { extractContentFromPage } from '@utils/contentExtractor';
 import { useCallback, useEffect, useState } from 'react';
@@ -52,11 +53,13 @@ export function usePageContentAnalysis() {
 
   const handleTabUpdated = useCallback((tabId: number, changeInfo: TabChangeInfo, tab: chrome.tabs.Tab) => {
     if (changeInfo.url && tab.active) {
-      setCurrentUrl(changeInfo.url);
-      setExtractionResult(null);
-      setTimeout(() => analyzeWebsiteContent(), 500);
+      if (isUrlChange(currentUrl, changeInfo.url)) {
+        setCurrentUrl(changeInfo.url);
+        setExtractionResult(null);
+        setTimeout(() => analyzeWebsiteContent(), 500);
+      }
     }
-  }, [analyzeWebsiteContent]);
+  }, [analyzeWebsiteContent, currentUrl]);
 
   const handleTabActivated = useCallback(async () => {
     await syncActiveTabUrl();
