@@ -1,5 +1,5 @@
-import IconLoading from "@/assets/icons/loading";
-import IconRefresh from "@/assets/icons/refresh";
+import HeadingSidePanel from "@/components/HeadingSidepanel";
+import { useDisplay } from "@/hooks/useDisplay";
 import "@/index.css";
 import ContentItemComponent from '@components/ContentItem';
 import { scrollToElement } from '@utils/navigation';
@@ -8,21 +8,11 @@ import usePageContentAnalysis from '../hooks/usePageContentAnalysis';
 
 export default function SidePanel() {
   const { extractionResult, loading, analyzeWebsiteContent } = usePageContentAnalysis();
+  const displayOptions = useDisplay();
 
   return (
     <div className="w-full p-4 box-border font-system bg-white dark:bg-gray-800  text-gray-800 dark:text-gray-200">
-      <section className="sticky top-4 flex items-center justify-between">
-        <h1 className=" text-lg font-semibold text-gray-900 dark:text-white">Content Items</h1>
-        <button
-          type="button"
-          onClick={analyzeWebsiteContent}
-          className="cursor-pointer"
-          aria-label="Refresh content analysis"
-        >
-          {loading ? <IconLoading className="animate-spin w-4 h-4" /> : <IconRefresh className="w-4 h-4" />}
-        </button>
-
-      </section>
+      <HeadingSidePanel analyzeWebsiteContent={analyzeWebsiteContent} loading={loading} displayOptions={displayOptions} />
       <div className="mt-4 flex-1">
         {extractionResult && extractionResult?.content.length > 0 && !loading ? (
           <div>
@@ -31,7 +21,7 @@ export default function SidePanel() {
                 <ContentItemComponent
                   key={item.id ? `${item.type}-${item.id}` : `${item.type}-${index}`}
                   item={item}
-                  index={index}
+                  displayOptions={displayOptions}
                   onScrollToElement={scrollToElement}
                 />
               ))}
