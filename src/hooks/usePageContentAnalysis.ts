@@ -46,7 +46,7 @@ export function usePageContentAnalysis() {
     } catch (error) {
       console.error('Error analyzing content:', error);
     } finally {
-      setTimeout(() => setLoading(false), 1000);
+      setTimeout(() => setLoading(false), 500);
     }
   }, []);
 
