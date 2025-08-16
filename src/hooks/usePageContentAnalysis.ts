@@ -27,7 +27,7 @@ export function usePageContentAnalysis() {
     }
   }, []);
 
-  const analyzeWebsiteContent = useCallback(async () => {
+  const analyzeWebsiteContent = useCallback(async (manual?: boolean) => {
     setLoading(true);
     try {
       if (typeof chrome !== 'undefined' && chrome.tabs && chrome.scripting) {
@@ -47,7 +47,12 @@ export function usePageContentAnalysis() {
     } catch (error) {
       console.error('Error analyzing content:', error);
     } finally {
-      setTimeout(() => setLoading(false), 500);
+      if (manual) {
+        setTimeout(() => setLoading(false), 500);
+      }
+      else {
+        setLoading(false);
+      }
     }
   }, []);
 

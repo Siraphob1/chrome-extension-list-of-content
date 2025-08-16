@@ -1,5 +1,6 @@
 import HeadingSidePanel from "@/components/HeadingSidepanel";
 import { useDisplay } from "@/hooks/useDisplay";
+import { useResize } from "@/hooks/useResize";
 import { useSelectContent } from "@/hooks/useSelectContent";
 import "@/index.css";
 import ContentItemComponent from '@components/ContentItem';
@@ -11,6 +12,7 @@ export default function SidePanel() {
   const { extractionResult, loading, analyzeWebsiteContent } = usePageContentAnalysis();
   const displayOptions = useDisplay();
   const propsSelectContent = useSelectContent();
+  useResize({ analyzeWebsiteContent });
 
   return (
     <div className="w-full p-4 pr-0 box-border font-system bg-white text-gray-800">

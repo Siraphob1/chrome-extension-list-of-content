@@ -4,7 +4,7 @@ import type { DisplayOptionsType } from "@/hooks/useDisplay";
 import clsx from "clsx";
 
 interface Props {
-  analyzeWebsiteContent: () => void;
+  analyzeWebsiteContent: (manual?: boolean) => void;
   loading: boolean;
   displayOptions: DisplayOptionsType
 }
@@ -25,7 +25,7 @@ const HeadingSidePanel = ({ analyzeWebsiteContent, loading, displayOptions }: Pr
         </button>
         <button
           type="button"
-          onClick={analyzeWebsiteContent}
+          onClick={() => analyzeWebsiteContent(true)}
           className="cursor-pointer"
           aria-label="Refresh content analysis"
         >
