@@ -17,8 +17,9 @@ const HeadingSidePanel = ({ analyzeWebsiteContent, loading, displayOptions }: Pr
         <button
           type="button"
           className={clsx("text-base cursor-pointer",
-            { "line-through": displayOptions.stateTagName }
+            { "line-through": stateTagName }
           )}
+          aria-label="Toggle display tag of each heading"
           onClick={toggleTagName}>
           Tag
         </button>
