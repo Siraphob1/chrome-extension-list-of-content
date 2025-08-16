@@ -11,7 +11,7 @@ export default function SidePanel() {
   const displayOptions = useDisplay();
 
   return (
-    <div className="w-full p-4 box-border font-system bg-white dark:bg-gray-800  text-gray-800 dark:text-gray-200">
+    <div className="w-full p-4 box-border font-system bg-white text-gray-800">
       <HeadingSidePanel analyzeWebsiteContent={analyzeWebsiteContent} loading={loading} displayOptions={displayOptions} />
       <div className="mt-4 flex-1">
         {extractionResult && extractionResult?.content.length > 0 && !loading ? (
@@ -28,7 +28,7 @@ export default function SidePanel() {
             </div>
           </div>
         ) : (
-          <div className="text-center py-10 px-5 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+          <div className="text-center py-10 px-5 text-gray-600 text-sm leading-relaxed">
             {loading ? 'Analyzing page content...' : 'No content found with IDs on this page. Make sure elements have ID attributes.'}
           </div>
         )}

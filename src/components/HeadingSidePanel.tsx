@@ -12,7 +12,7 @@ const HeadingSidePanel = ({ analyzeWebsiteContent, loading, displayOptions }: Pr
   const { toggleTagName, stateTagName } = displayOptions;
   return (
     <section className="sticky top-4 flex items-center justify-between">
-      <h1 className=" text-lg font-semibold text-gray-900 dark:text-white">Content Items</h1>
+      <h1 className=" text-lg font-semibold text-gray-900">Content Items</h1>
       <section className="flex items-center gap-2">
         <button
           type="button"

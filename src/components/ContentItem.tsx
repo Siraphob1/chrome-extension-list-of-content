@@ -46,7 +46,7 @@ export default function ContentItem({ item, displayOptions, onScrollToElement }:
         tabIndex={0}
         title={item.id ? `Click to focus on element with ID: ${item.id}` : 'No ID available'}
       >
-        <span className="text-gray-700 dark:text-gray-200 break-words group-hover:opacity-50">
+        <span className="text-gray-700 break-words group-hover:opacity-50">
           {stateTagName && <span className="border px-1 rounded-[4px]">{item.tag}</span>} {item.text}
         </span>
       </button>
