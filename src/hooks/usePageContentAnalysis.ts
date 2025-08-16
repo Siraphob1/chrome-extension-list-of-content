@@ -46,7 +46,7 @@ export function usePageContentAnalysis() {
     } catch (error) {
       console.error('Error analyzing content:', error);
     } finally {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 1000);
     }
   }, []);
 
@@ -83,7 +83,7 @@ export function usePageContentAnalysis() {
   }, [syncActiveTabUrl, handleTabUpdated, handleTabActivated]);
 
 
-  return { currentUrl, extractionResult, loading, reset } as const;
+  return { currentUrl, extractionResult, loading, reset, analyzeWebsiteContent } as const;
 }
 
 export default usePageContentAnalysis;
