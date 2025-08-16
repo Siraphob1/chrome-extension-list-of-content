@@ -68,6 +68,7 @@ export function usePageContentAnalysis() {
 
   useEffect(() => {
     syncActiveTabUrl();
+    analyzeWebsiteContent();
 
     if (typeof chrome !== 'undefined' && chrome.tabs) {
       chrome.tabs.onUpdated.addListener(handleTabUpdated);
@@ -80,7 +81,7 @@ export function usePageContentAnalysis() {
         chrome.tabs.onActivated.removeListener(handleTabActivated);
       }
     };
-  }, [syncActiveTabUrl, handleTabUpdated, handleTabActivated]);
+  }, [syncActiveTabUrl, handleTabUpdated, handleTabActivated, analyzeWebsiteContent]);
 
 
   return { currentUrl, extractionResult, loading, reset, analyzeWebsiteContent } as const;
