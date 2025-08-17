@@ -1,5 +1,5 @@
 {
-	"name": "website-table-of-contents-extension",
+	"name": "table-of-contents",
 	"description": "A browser extension that generates and analyzes a table of contents from websites in a convenient side panel",
 	"private": true,
 	"version": "1.0.0",
