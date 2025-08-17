@@ -9,17 +9,17 @@
 		"128": "icon/128.png"
 	},
 	"{{chrome}}.action": {
-		"default_title": "Open Website Content Lister"
+		"default_title": "Open Website Table of Contents"
 	},
 	"{{firefox}}.browser_action": {
-		"default_title": "Open Website Content Lister"
+		"default_title": "Open Website Table of Contents"
 	},
 	"{{chrome}}.side_panel": {
 		"default_path": "src/sidepanel.html"
 	},
 	"{{firefox}}.sidebar_action": {
 		"default_panel": "src/sidepanel.html",
-		"default_title": "Website Content Lister"
+		"default_title": "Website Table of Contents"
 	},
 	"background": {
 		"{{chrome}}.service_worker": "src/background.ts",

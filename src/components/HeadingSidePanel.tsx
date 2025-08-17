@@ -12,7 +12,7 @@ const HeadingSidePanel = ({ analyzeWebsiteContent, loading, displayOptions }: Pr
   const { toggleTagName, stateTagName } = displayOptions;
   return (
     <section className="sticky top-4 flex items-center justify-between bg-white">
-      <h1 className=" text-lg font-semibold text-gray-900">Content List</h1>
+      <h1 className=" text-lg font-semibold text-gray-900">Table of contents</h1>
       <section className="flex items-center gap-2">
         <button
           type="button"
@@ -27,7 +27,7 @@ const HeadingSidePanel = ({ analyzeWebsiteContent, loading, displayOptions }: Pr
           type="button"
           onClick={() => analyzeWebsiteContent(true)}
           className="cursor-pointer"
-          aria-label="Refresh content analysis"
+          aria-label="Refresh table of contents analysis"
         >
           {loading ? <IconLoading className="animate-spin w-4 h-4" /> : <IconRefresh className="w-4 h-4" />}
         </button>

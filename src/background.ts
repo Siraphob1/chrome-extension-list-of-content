@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 
-console.log("Website Content Lister background script loaded!");
+console.log("Website table of contents background script loaded!");
 
 browser.runtime.onInstalled.addListener((details) => {
   console.log("Extension installed:", details);

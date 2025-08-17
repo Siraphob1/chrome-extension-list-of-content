@@ -1,11 +1,12 @@
-# Website Content Lister
 
-A browser extension that lists and analyzes content from websites in a convenient side panel. Built with React, TypeScript, and Tailwind CSS.
+# Website Table of Contents Extension
+
+A browser extension that generates and analyzes a table of contents from websites in a convenient side panel. Built with React, TypeScript, and Tailwind CSS.
 
 ## Features
-- Extracts and displays headings and content structure from any web page
+- Extracts and displays a table of contents (headings structure) from any web page
 - Side panel UI for easy navigation
-- Click to scroll to content on the page
+- Click to scroll to sections on the page
 - Reload/refresh analysis with a button
 - Responsive design
 
@@ -25,9 +26,9 @@ A browser extension that lists and analyzes content from websites in a convenien
 
 ## Usage
 - Open the extension side panel from your browser.
-- The extension will automatically analyze the current page and list headings/content.
-- Click on any listed item to scroll to that section on the page.
-- Use the reload button to reanalyze the page content.
+- The extension will automatically analyze the current page and generate a table of contents.
+- Click on any item in the table of contents to scroll to that section on the page.
+- Use the reload button to reanalyze the page table of contents.
 
 ## Development
 - Built with [React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [Vite](https://vitejs.dev/), and [Tailwind CSS](https://tailwindcss.com/).

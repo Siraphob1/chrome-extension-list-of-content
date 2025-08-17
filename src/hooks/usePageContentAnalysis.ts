@@ -45,7 +45,7 @@ export function usePageContentAnalysis() {
         }
       }
     } catch (error) {
-      console.error('Error analyzing content:', error);
+      console.error('Error analyzing table of contents:', error);
     } finally {
       if (manual) {
         setTimeout(() => setLoading(false), 500);
